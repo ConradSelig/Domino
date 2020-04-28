@@ -5,6 +5,6 @@
 
 using namespace std;
 
-string getCurrentDateTime();
+string getCurrentDateTime(char mode='a', bool include_year=true);
 
 #endif

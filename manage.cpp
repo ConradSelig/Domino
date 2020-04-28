@@ -14,6 +14,7 @@ int main(int argc, char *argv[]) {
     // ===== variables =====
     // name for the metadata_file
     string metadata_file_name = "metadata.xml"; 
+    string tmp;
 
     // If command line arguments are given, use those instead of the defaults
     if(argc != 0) {
@@ -35,10 +36,11 @@ int main(int argc, char *argv[]) {
 
     // output welcome message
     cout << endl << "Welcome back Mr.Selig." << endl;
-    cout << "Last login: " << metadata_file.child("lastlogin").child_value() << "." << endl;
+    cout << "Your last login was on " << metadata_file.child("lastlogin").child_value() << "." << endl;
     
     // save metadata file
-    metadata_file.child("lastlogin").last_child().set_value(getCurrentDateTime().c_str());
+    tmp = getCurrentDateTime('d', true) + " at " + getCurrentDateTime('t', false);
+    metadata_file.child("lastlogin").last_child().set_value(tmp.c_str());
     cout << endl << "Saving metadata: " << ((metadata_file.save_file("metadata.xml") == 1) ? "Done." : "FAILED") << endl;
 
     return 0;
