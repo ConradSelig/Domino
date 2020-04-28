@@ -1,5 +1,5 @@
-Domino: manage.o utils.o
-	g++ -I/usr/local/include -L/usr/local/lib -o Domino *.o -lyaml-cpp
+Domino: manage.o utils.o pugixml.o
+	g++ -o Domino *.o
 	@echo "Cleaning Up..."
 	rm *.o
 
@@ -8,6 +8,9 @@ manage.o: manage.cpp
 
 utils.o: utils.cpp utils.h
 	g++ -c utils.cpp
+
+pugixml.o: pugixml.cpp pugixml.hpp pugiconfig.hpp
+	g++ -c pugixml.cpp
 
 clean:
 	-rm *.o

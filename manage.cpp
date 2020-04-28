@@ -3,11 +3,9 @@
 #include<string>
 #include<fstream>
 
-// local build includes
-#include "yaml-cpp/yaml.h"
-
 // project header files
 #include "utils.h"
+#include "pugixml.hpp"
 
 using namespace std;
 
@@ -15,26 +13,33 @@ int main(int argc, char *argv[]) {
 
     // ===== variables =====
     // name for the metadata_file
-    const string metadata_file_name = "metadata.yaml"; 
+    string metadata_file_name = "metadata.xml"; 
 
     // If command line arguments are given, use those instead of the defaults
     if(argc != 0) {
-
+        // "metadata.xml" = argv[0];
     }
 
-    // Load the metadata yaml file
-    YAML::Node metadata = YAML::LoadFile(metadata_file_name);
+    // load metadata file
+    pugi::xml_document metadata_file;
+    pugi::xml_parse_result metadata = metadata_file.load_file("metadata.xml");
+
+    // check that the file did load
+    if(metadata_file) {
+        cout << "XML FILE [" << metadata_file_name << "] WAS LOADED" << endl;
+    } else {
+        cout << "XML FILE [" << metadata_file_name << "] COULD NOT BE LOADED." << endl;
+        cout << "CLOSING PROGRAM" << endl;
+        return 1;
+    }
 
     // output welcome message
-    cout << "Welcome back." << endl;
-    cout << "Recovering data from " << metadata["lastRunDate"].as<string>() << endl;
-
-    // system is closing, set the lastRunDate in the metadata file
-    metadata["lastRunDate"] = getCurrentDateTime();
-
-    // save the metadata file
-    ofstream fout(metadata_file_name);
-    fout << metadata;
+    cout << endl << "Welcome back Mr.Selig." << endl;
+    cout << "Last login: " << metadata_file.child("lastlogin").child_value() << "." << endl;
     
+    // save metadata file
+    metadata_file.child("lastlogin").last_child().set_value(getCurrentDateTime().c_str());
+    cout << endl << "Saving metadata: " << ((metadata_file.save_file("metadata.xml") == 1) ? "Done." : "FAILED") << endl;
+
     return 0;
 }
