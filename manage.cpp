@@ -5,7 +5,7 @@
 
 // project header files
 #include "utils.h"
-#include "pugixml.hpp"
+#include "pugixml/pugixml.hpp"
 
 using namespace std;
 

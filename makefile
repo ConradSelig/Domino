@@ -9,8 +9,8 @@ manage.o: manage.cpp
 utils.o: utils.cpp utils.h
 	g++ -c utils.cpp
 
-pugixml.o: pugixml.cpp pugixml.hpp pugiconfig.hpp
-	g++ -c pugixml.cpp
+pugixml.o: pugixml/pugixml.cpp pugixml/pugixml.hpp pugixml/pugiconfig.hpp
+	g++ -c pugixml/pugixml.cpp
 
 clean:
 	-rm *.o

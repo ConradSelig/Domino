@@ -3,6 +3,7 @@
 #include<iostream>
 
 #include "utils.h"
+#include "pugixml/pugixml.hpp"
 
 using namespace std;
 
