@@ -1,2 +1,3 @@
 # Domino
-The sucessor to Mike, my original AI assistant.
+
+Experimental project working to store data in a more user-accessable way, while still being terminal dependent.
