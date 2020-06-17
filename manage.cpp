@@ -28,7 +28,13 @@ int main(int argc, char *argv[]) {
 
     // output welcome message
     cout << "Welcome back." << endl;
-    cout << "Recovering data from " << metadata["lastRunDate"].as<string>() << endl;
+    cout << "Recovering data from " << metadata["lastRunDate"].as<string>() 
+            << endl;
+
+    cout << endl;
+    cout << "Currently running \"" << metadata["codename"] << "\". (Mark " 
+            << metadata["mark"] << "; Version " << metadata["version"] << ")" 
+            << endl;
 
     // system is closing, set the lastRunDate in the metadata file
     metadata["lastRunDate"] = getCurrentDateTime();
