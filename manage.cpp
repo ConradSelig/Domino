@@ -15,15 +15,16 @@ int main(int argc, char *argv[]) {
 
     // ===== variables =====
     // name for the metadata_file
-    const string metadata_file_name = "metadata.yaml"; 
+    string metadata_file_name = "metadata.yaml";
+    const string &mfn = metadata_file_name; 
 
     // If command line arguments are given, use those instead of the defaults
-    if(argc != 0) {
-
+    if(argc > 1) {
+        metadata_file_name = argv[1];
     }
 
     // Load the metadata yaml file
-    YAML::Node metadata = YAML::LoadFile(metadata_file_name);
+    YAML::Node metadata = YAML::LoadFile(mfn);
 
     // output welcome message
     cout << "Welcome back." << endl;
