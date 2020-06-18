@@ -18,6 +18,8 @@ int main(int argc, char *argv[]) {
     // name for the metadata_file
     string metadata_file_name = "metadata.yaml";
     const string &mfn = metadata_file_name; 
+    string next_yaml_file;
+    const string &nyf = next_yaml_file;
 
     // initialize the argument parser
     juzzlin::Argengine argengine(argc, argv);
@@ -33,13 +35,17 @@ int main(int argc, char *argv[]) {
     // Load the metadata yaml file
     YAML::Node metadata = YAML::LoadFile(mfn);
 
+    // Open the version yaml file
+    next_yaml_file = "version.yaml";
+    YAML::Node version = YAML::LoadFile(nyf);
+
     // output loading messages
     cout << "Recovering data from " << metadata["lastRunDate"].as<string>() 
             << endl;
 
     cout << endl;
-    cout << "Currently running \"" << metadata["codename"] << "\". (Mark " 
-            << metadata["mark"] << "; Version " << metadata["version"] << ")" 
+    cout << "Currently running \"" << version["codename"] << "\". (Mark " 
+            << version["mark"] << "; Version " << version["version"] << ")" 
             << endl;
 
     // output welcome messages
