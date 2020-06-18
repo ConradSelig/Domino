@@ -33,8 +33,7 @@ int main(int argc, char *argv[]) {
     // Load the metadata yaml file
     YAML::Node metadata = YAML::LoadFile(mfn);
 
-    // output welcome message
-    cout << "Welcome back." << endl;
+    // output loading messages
     cout << "Recovering data from " << metadata["lastRunDate"].as<string>() 
             << endl;
 
@@ -42,6 +41,12 @@ int main(int argc, char *argv[]) {
     cout << "Currently running \"" << metadata["codename"] << "\". (Mark " 
             << metadata["mark"] << "; Version " << metadata["version"] << ")" 
             << endl;
+
+    // output welcome messages
+    cout << endl;
+    for(int i = 0; i < 80; i++) cout << "=";
+    cout << endl;
+    cout << "Welcome back Mr.Selig." << endl;
 
     // system is closing, set the lastRunDate in the metadata file
     metadata["lastRunDate"] = getCurrentDateTime();
