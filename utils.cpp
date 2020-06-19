@@ -1,5 +1,6 @@
 #include<ctime>
 #include<string>
+#include<fstream>
 
 #include "utils.h"
 
@@ -17,4 +18,10 @@ string getCurrentDateTime() {
     string time(stripped_time);
 
     return time;
+}
+
+
+void create_blank_file(string file_name) {
+    ofstream (file_name.c_str());
+    return;
 }

@@ -6,5 +6,6 @@
 using namespace std;
 
 string getCurrentDateTime();
+void create_blank_file(string file_name);
 
 #endif

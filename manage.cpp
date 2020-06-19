@@ -21,6 +21,9 @@ int main(int argc, char *argv[]) {
     string next_yaml_file;
     const string &nyf = next_yaml_file;
 
+    YAML::Node metadata;
+    YAML::Node version;
+
     // initialize the argument parser
     juzzlin::Argengine argengine(argc, argv);
 
@@ -33,12 +36,28 @@ int main(int argc, char *argv[]) {
     argengine.parse();
 
     // Load the metadata yaml file
-    YAML::Node metadata = YAML::LoadFile(mfn);
+    try {
+        metadata = YAML::LoadFile(mfn);
+    } catch (YAML::BadFile) {
+        create_blank_file(metadata_file_name);
+        metadata = YAML::LoadFile(mfn);
+    }
 
     // Open the version yaml file
     next_yaml_file = "version.yaml";
-    YAML::Node version = YAML::LoadFile(nyf);
+    try {
+        version = YAML::LoadFile(nyf);
+    } catch (YAML::BadFile) {
+        cout << "No version file found. Aborting." << endl;
+        return -1;
+    }
 
+    // we're going to manually check that all metadata keys exist, this is to ensure
+    // that the minimum requirement for the metadata file is met.
+    if (!metadata["lastRunDate"]) {
+        metadata["lastRunDate"] = "UNKNOWN";
+    }
+    
     // output loading messages
     cout << "Recovering data from " << metadata["lastRunDate"].as<string>() 
             << endl;
