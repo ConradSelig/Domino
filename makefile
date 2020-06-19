@@ -13,5 +13,4 @@ argengine.o: argengine.cpp argengine.hpp
 	g++ -c -g argengine.cpp
 
 clean:
-	-rm *.o
 	-rm ./Domino

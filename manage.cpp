@@ -2,6 +2,8 @@
 #include<iostream>
 #include<string>
 #include<fstream>
+#include<algorithm>
+#include<vector>
 
 // local build includes
 #include "yaml-cpp/yaml.h"
@@ -20,6 +22,9 @@ int main(int argc, char *argv[]) {
     const string &mfn = metadata_file_name; 
     string next_yaml_file;
     const string &nyf = next_yaml_file;
+
+    string node_value;
+    vector<string> tokens;
 
     YAML::Node metadata;
     YAML::Node version;
@@ -67,11 +72,25 @@ int main(int argc, char *argv[]) {
             << version["mark"] << "; Version " << version["version"] << ")" 
             << endl;
 
-    // output welcome messages
+    // output split line
     cout << endl;
-    for(int i = 0; i < 80; i++) cout << "=";
-    cout << endl;
-    cout << "Welcome back Mr.Selig." << endl;
+    for(int i = 0; i < 40; i++) cout << "=";
+    cout << endl << endl;
+    
+    // output welcome back message
+    if (metadata["userName"]) {
+        node_value = metadata["userName"].as<string>();
+
+        cout << "Welcome back ";
+        if(metadata["prefix"] && node_value.find(' ') != string::npos) {
+            tokens = split(node_value, ' ');
+            cout << metadata["prefix"] << tokens[tokens.size() - 1] << endl;
+        } else {
+            cout << metadata["userName"] << endl;
+        }
+    } else {
+        cout << "Welcome back." << endl;
+    }
 
     // system is closing, set the lastRunDate in the metadata file
     metadata["lastRunDate"] = getCurrentDateTime();
