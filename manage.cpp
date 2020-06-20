@@ -11,6 +11,7 @@
 // project header files
 #include "utils.h"
 #include "argengine.hpp"
+#include "yaml_extension.h"
 
 using namespace std;
 
@@ -24,6 +25,8 @@ int main(int argc, char *argv[]) {
     const string &nyf = next_yaml_file;
 
     string node_value;
+    const string &nv = node_value;
+
     vector<string> tokens;
 
     YAML::Node metadata;
@@ -46,8 +49,11 @@ int main(int argc, char *argv[]) {
     } catch (YAML::BadFile) {
         create_blank_file(metadata_file_name);
         metadata = YAML::LoadFile(mfn);
+        metadata["lastRunDate"] = YAML::Null;
+        metadata["userName"] = YAML::Null;
+        metadata["prefix"] = YAML::Null;
     }
-
+    
     // Open the version yaml file
     next_yaml_file = "version.yaml";
     try {
@@ -57,12 +63,16 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    // we're going to manually check that all metadata keys exist, this is to ensure
-    // that the minimum requirement for the metadata file is met.
-    if (!metadata["lastRunDate"]) {
-        metadata["lastRunDate"] = "UNKNOWN";
+    // ensure that metadata keys exist
+    metadata = ensure_key(metadata, "lastRunDate");
+    metadata = ensure_key(metadata, "userName");
+    metadata = ensure_key(metadata, "prefix");
+
+    // ensure that the last run date is not Null
+    if(metadata["lastRunDate"].IsNull()) {
+        metadata["lastRunDate"] = "unknown";
     }
-    
+
     // output loading messages
     cout << "Recovering data from " << metadata["lastRunDate"].as<string>() 
             << endl;
@@ -78,17 +88,20 @@ int main(int argc, char *argv[]) {
     cout << endl << endl;
     
     // output welcome back message
-    if (metadata["userName"]) {
+    try {
         node_value = metadata["userName"].as<string>();
-
-        cout << "Welcome back ";
-        if(metadata["prefix"] && node_value.find(' ') != string::npos) {
-            tokens = split(node_value, ' ');
-            cout << metadata["prefix"] << tokens[tokens.size() - 1] << endl;
+        if (!YAML::IsNullString(nv)) { 
+            cout << "Welcome back ";
+            if(metadata["prefix"] && node_value.find(' ') != string::npos) {
+                tokens = split(node_value, ' ');
+                cout << metadata["prefix"] << tokens[tokens.size() - 1] << endl;
+            } else {
+                cout << metadata["userName"] << endl;
+            }
         } else {
-            cout << metadata["userName"] << endl;
+            cout << "Welcome back." << endl;
         }
-    } else {
+    } catch (YAML::BadConversion) {
         cout << "Welcome back." << endl;
     }
 
