@@ -92,11 +92,11 @@ int main(int argc, char *argv[]) {
         node_value = metadata["userName"].as<string>();
         if (!YAML::IsNullString(nv)) { 
             cout << "Welcome back ";
-            if(metadata["prefix"] && node_value.find(' ') != string::npos) {
+            if(check_key(metadata, "prefix") && node_value.find(' ') != string::npos) {
                 tokens = split(node_value, ' ');
-                cout << metadata["prefix"] << tokens[tokens.size() - 1] << endl;
+                cout << metadata["prefix"] << tokens[tokens.size() - 1] << "." << endl;
             } else {
-                cout << metadata["userName"] << endl;
+                cout << metadata["userName"] << "." << endl;
             }
         } else {
             cout << "Welcome back." << endl;
