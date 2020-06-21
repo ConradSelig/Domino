@@ -9,9 +9,10 @@
 #include "yaml-cpp/yaml.h"
 
 // project header files
-#include "utils.h"
 #include "argengine.hpp"
+#include "utils.h"
 #include "yaml_extension.h"
+#include "db_utils.h"
 
 using namespace std;
 
@@ -28,6 +29,7 @@ int main(int argc, char *argv[]) {
     const string &nv = node_value;
 
     vector<string> tokens;
+    vector<string> db_files;
 
     YAML::Node metadata;
     YAML::Node version;
@@ -67,6 +69,7 @@ int main(int argc, char *argv[]) {
     metadata = ensure_key(metadata, "lastRunDate");
     metadata = ensure_key(metadata, "userName");
     metadata = ensure_key(metadata, "prefix");
+    metadata = ensure_key(metadata, "databasePath");
 
     // ensure that the last run date is not Null
     if(metadata["lastRunDate"].IsNull()) {
@@ -103,6 +106,25 @@ int main(int argc, char *argv[]) {
         }
     } catch (YAML::BadConversion) {
         cout << "Welcome back." << endl;
+    }
+
+    if(!check_key(metadata, "databasePath")) {
+        cout << "No database path was provided. Please add a path into" <<
+                " your metadata.yaml file." << endl;
+        // system is closing, set the lastRunDate in the metadata file
+        metadata["lastRunDate"] = getCurrentDateTime();
+    
+        // save the metadata file
+        ofstream fout(metadata_file_name);
+        fout << metadata;
+
+        return -1;
+    }
+
+    cout << endl << "Current files in the database: " << endl;
+    db_files = list_dir(metadata["databasePath"].as<string>());
+    for(int i = 0; i < db_files.size(); i++) {
+        cout << db_files.at(i) << endl;
     }
 
     // system is closing, set the lastRunDate in the metadata file
